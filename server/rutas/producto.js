@@ -64,6 +64,36 @@ app.get("/producto/:id", verificaToken, (req, res) => {
     });
 });
 
+//-----nusca produc por termino//////
+
+
+app.get("/producto/buscar/:termino",verificaToken,(req,res)=>{
+
+  let termino=req.params.termino;
+
+  let regex= new RegExp(termino, `i`);
+
+  Producto.find({nombre:termino})
+  .populate("categoria", "descripcion")
+  .exec((err, producto)=>{
+    if (err) {
+      return res.status(500).json({
+        ok: false,
+        err,
+      });
+    }
+    res.json({
+      ok:true,
+      producto
+    })
+  })
+
+
+})
+
+
+
+
 app.post("/producto", verificaToken, (req, res) => {
   let body = req.body;
 
